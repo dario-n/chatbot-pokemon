@@ -9,7 +9,7 @@
 			var messageBox = document.querySelectorAll("[contenteditable='true']")[0];
 
 			//add text into input field
-			messageBox.innerHTML = "los comandos disponibles son\n@crear \n@join \n@lista";
+			messageBox.innerHTML = "los comandos disponibles son\n@crear \n@join \n@lista \n@cancelar";
 
 			//Force refresh
 			event = document.createEvent("UIEvents");
@@ -33,11 +33,12 @@
 				pokemon: list[0],
 				horario: list[1],
 				lugar: list[2],
-				organizador: list[3]
+				organizador: list[3],
+				user: list[3] + "\n- "
 			};
 
 			//add text into input field
-			messageBox.innerHTML = raid.pokemon + " Se hace: " + raid.horario + " en " + raid.lugar + " organiza " + raid.organizador ;
+			messageBox.innerHTML = raid.pokemon + " Se hace: " + raid.horario + " en " + raid.lugar + " organiza " + raid.organizador + "\n- " + raid.user;
 			raids.push(raid);
 			//Force refresh
 			event = document.createEvent("UIEvents");
@@ -55,7 +56,7 @@
 			if (raids.length > 0) {
 					raids.forEach ( function(element) {
 					//add text into input field
-					messageBox.innerHTML = messageBox.innerHTML + element.pokemon + " Se hace: " + element.horario + " en " + element.lugar + " organiza " + element.organizador + "\n -" + element.user + "\n" ;
+					messageBox.innerHTML = messageBox.innerHTML + element.pokemon + " Se hace: " + element.horario + " en " + element.lugar + " organiza " + element.organizador + "\n- " + element.user;
 				});
 			}
 			else {
@@ -85,9 +86,6 @@
 				if ( raids[nroRaid].user != undefined) {
 					raids[nroRaid].user = raids[nroRaid].user + user[0] + "\n- " ;
 				}
-				else {
-					raids[nroRaid].user = raids[nroRaid].organizador + "\n- ";
-				}
 
 				messageBox.innerHTML = raids[nroRaid].pokemon + " Se hace: " + raids[nroRaid].horario + " en " + raids[nroRaid].lugar + " organiza " + raids[nroRaid].organizador + "\n - " + raids[nroRaid].user;
 			}
@@ -98,6 +96,30 @@
 			//add text into input field
 
 
+			//Force refresh
+			event = document.createEvent("UIEvents");
+			event.initUIEvent("input", true, true, window, 1);
+			messageBox.dispatchEvent(event);
+
+			//Click at Send Button
+			eventFire(document.querySelector('span[data-icon="send"]'), 'click');
+		}
+
+		function cancelarRaid() {
+			var messageBox = document.querySelectorAll("[contenteditable='true']")[0];
+			var message = document.getElementsByClassName('selectable-text invisible-space copyable-text')
+			var nroRaid = message[(message.length)-1].innerText.split("@cancelar ").pop();
+			nroRaid = nroRaid - 1;
+
+			if (nroRaid <= raids.length) {
+				for (var i = nroRaid; i < raids.length; i++) {
+					raids[i] = raids[i+1];
+				}
+				messageBox.innerHTML = "la raid " + nroRaid + " se cancelo";
+			}
+			else {
+				messageBox.innerHTML = "no existe la raid seleccionada";
+			}
 			//Force refresh
 			event = document.createEvent("UIEvents");
 			event.initUIEvent("input", true, true, window, 1);
@@ -124,6 +146,9 @@
 				case '@join':
 					unirseRaid();
 					break;
+				case '@cancelar':
+				cancelarRaid();
+				break;
 			}
 
 		}
