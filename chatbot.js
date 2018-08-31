@@ -9,7 +9,7 @@
 			var messageBox = document.querySelectorAll("[contenteditable='true']")[0];
 
 			//add text into input field
-			messageBox.innerHTML = "los comandos disponibles son\n@crear \n@join \n@lista \n@cancelar";
+			messageBox.innerHTML = 'los comandos disponibles son\n@crear Pokemon,Hora,Lugar,Organizador \n@join Nombre,Nro Raid \n@lista \n@cancelar';
 
 			//Force refresh
 			event = document.createEvent("UIEvents");
@@ -26,9 +26,11 @@
 
 			var message = document.getElementsByClassName('selectable-text invisible-space copyable-text')
 
-			var list = message[(message.length)-1].innerText.split("@crear ").pop();
+			var list = message[(message.length)-1].innerText.split("@crear").pop();
+			
 			list = list.split(",");
-
+			
+			if (list.length == 4) {
 			var raid = {
 				pokemon: list[0],
 				horario: list[1],
@@ -38,8 +40,12 @@
 			};
 
 			//add text into input field
-			messageBox.innerHTML = raid.pokemon + " Se hace: " + raid.horario + " en " + raid.lugar + " organiza " + raid.organizador + "\n- " + raid.user;
+			messageBox.innerHTML = raid.pokemon + " | Se hace: " + raid.horario + " | en " + raid.lugar + " | organiza " + raid.organizador + "\n- " + raid.user;
 			raids.push(raid);
+			}
+			else {
+				messageBox.innerHTML = 'el formato para crear raids es "Pokemon,Hora,Lugar,Organizador"';
+			}
 			//Force refresh
 			event = document.createEvent("UIEvents");
 			event.initUIEvent("input", true, true, window, 1);
@@ -56,7 +62,7 @@
 			if (raids.length > 0) {
 					raids.forEach ( function(element) {
 					//add text into input field
-					messageBox.innerHTML = messageBox.innerHTML + element.pokemon + " Se hace: " + element.horario + " en " + element.lugar + " organiza " + element.organizador + "\n- " + element.user;
+					messageBox.innerHTML = messageBox.innerHTML + element.pokemon + " | Se hace: " + element.horario + " | en " + element.lugar + " | Organiza " + element.organizador + "\n- " + element.user + "\n\n";
 				});
 			}
 			else {
@@ -76,21 +82,30 @@
 			var messageBox = document.querySelectorAll("[contenteditable='true']")[0];
 
 			var message = document.getElementsByClassName('selectable-text invisible-space copyable-text')
-			var user = message[(message.length)-1].innerText.split("@join ").pop();
+			var user = message[(message.length)-1].innerText.split("@join").pop();
 			var nroRaid;
-
-			if (raids.length > 0) {
+			
+			if (user != "") {
 				user = user.split(",");
-				nroRaid = user[1]-1;
+				if (user.length == 2) {
+					nroRaid = user[1]-1;
+					if (raids.length > 0 && raids[nroRaid] != undefined) {
+						if ( raids[nroRaid].user != undefined) {
+							raids[nroRaid].user = raids[nroRaid].user + user[0] + "\n- " ;
+						}
 
-				if ( raids[nroRaid].user != undefined) {
-					raids[nroRaid].user = raids[nroRaid].user + user[0] + "\n- " ;
+						messageBox.innerHTML = raids[nroRaid].pokemon + " | Se hace: " + raids[nroRaid].horario + " | en " + raids[nroRaid].lugar + " | Organiza " + raids[nroRaid].organizador + "\n- " + raids[nroRaid].user;
+					}
+					else {
+						messageBox.innerHTML = "no existe la raid seleccionada";
+					}
 				}
-
-				messageBox.innerHTML = raids[nroRaid].pokemon + " Se hace: " + raids[nroRaid].horario + " en " + raids[nroRaid].lugar + " organiza " + raids[nroRaid].organizador + "\n - " + raids[nroRaid].user;
+				else {
+					messageBox.innerHTML = 'para unirse el formato es "Nombre,Nro Raid"';
+				}
 			}
 			else {
-				messageBox.innerHTML = "no existe la raid seleccionada";
+				messageBox.innerHTML = 'sos un pelotudo, pone @ayuda';
 			}
 
 			//add text into input field
