@@ -143,6 +143,20 @@
 			//Click at Send Button
 			eventFire(document.querySelector('span[data-icon="send"]'), 'click');
 		}
+		
+		function borrarTodo() {
+			var messageBox = document.querySelectorAll("[contenteditable='true']")[0];
+			raids = []
+			
+			messageBox.innerHTML = "se borraron todas las raids activas";
+			
+			event = document.createEvent("UIEvents");
+			event.initUIEvent("input", true, true, window, 1);
+			messageBox.dispatchEvent(event);
+
+			//Click at Send Button
+			eventFire(document.querySelector('span[data-icon="send"]'), 'click');
+		}
 
 		function leerMensaje() {
 			var message = document.getElementsByClassName('selectable-text invisible-space copyable-text')
@@ -163,6 +177,9 @@
 					break;
 				case '@cancelar':
 				cancelarRaid();
+				break;
+				case '@clear':
+				borrarTodo();
 				break;
 			}
 
