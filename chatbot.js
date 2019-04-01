@@ -9,7 +9,7 @@
 			var messageBox = document.querySelectorAll("[contenteditable='true']")[0];
 
 			//add text into input field
-			messageBox.innerHTML = 'los comandos disponibles son\n@crear Pokemon,Hora,Lugar,Organizador \n@join Nombre,Nro Raid \n@lista \n@cancelar';
+			messageBox.innerHTML = 'los comandos disponibles son\n@crear Pokemon, Hora, Lugar, Organizador \n@join Nombre, Nro Raid \n@lista \n@cancelar';
 
 			//Force refresh
 			event = document.createEvent("UIEvents");
@@ -101,7 +101,7 @@
 					}
 				}
 				else {
-					messageBox.innerHTML = 'para unirse el formato es "Nombre,Nro Raid"';
+					messageBox.innerHTML = 'para unirse el formato es "Nombre, Nro Raid"';
 				}
 			}
 			else {
@@ -126,10 +126,8 @@
 			var nroRaid = message[(message.length)-1].innerText.split("@cancelar ").pop();
 			nroRaid = nroRaid - 1;
 
-			if (nroRaid <= raids.length) {
-				for (var i = nroRaid; i < raids.length; i++) {
-					raids[i] = raids[i+1];
-				}
+			if (nroRaid <= raids.length && raids[nroRaid] != undefined) {
+				raids.splice(nroRaid,1);
 				messageBox.innerHTML = "la raid " + nroRaid + " se cancelo";
 			}
 			else {
